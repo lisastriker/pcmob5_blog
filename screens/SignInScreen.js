@@ -8,23 +8,47 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Platform,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
+const API= "http://lisastriker.pythonanywhere.com"
+const API_LOGIN = "/auth"
 export default function SignInScreen({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorText, setErrorText] = useState("");
 
-  function login() {
+  async function login() {
+    console.log("---Login time----")
     Keyboard.dismiss();
-    aync
+    
+    try {
+      const response = await axios.post(API + API_LOGIN, {
+        username,
+        password
+      });
+      console.log("Success logging in!");
+      console.log(response);
+      AsyncStorage.setItem("token", response.data.access_token);
+      navigation.navigate("Account");
+    } catch(error){
+      console.log("Error logging in!");
+      console.log(error.response);
+      setErrorText("Can't Login")
+      // setErrorText(error.response.data.description);
+    }
     // do stuff here to log in
   }
 
+  function dismissKeyboard() {
+    if (Platform.OS !== "web") {
+      Keyboard.dismiss();
+    }
+  }
   return (
-  
+    <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
         <Text style={styles.title}>Sign in to blog</Text>
         <Text style={styles.fieldTitle}>Username</Text>
@@ -50,7 +74,7 @@ export default function SignInScreen({ navigation }) {
         </TouchableOpacity>
         <Text style={styles.errorText}>{errorText}</Text>
       </View>
- 
+    </TouchableWithoutFeedback>
   );
 }
 
