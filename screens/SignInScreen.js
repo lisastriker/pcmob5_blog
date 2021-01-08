@@ -9,6 +9,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 export default function SignInScreen({ navigation }) {
   const [username, setUsername] = useState("");
@@ -17,11 +19,12 @@ export default function SignInScreen({ navigation }) {
 
   function login() {
     Keyboard.dismiss();
+    aync
     // do stuff here to log in
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+  
       <View style={styles.container}>
         <Text style={styles.title}>Sign in to blog</Text>
         <Text style={styles.fieldTitle}>Username</Text>
@@ -47,7 +50,7 @@ export default function SignInScreen({ navigation }) {
         </TouchableOpacity>
         <Text style={styles.errorText}>{errorText}</Text>
       </View>
-    </TouchableWithoutFeedback>
+ 
   );
 }
 
