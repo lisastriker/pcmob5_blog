@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Button, StyleSheet, Text, View } from "react-native";
 import { commonStyles } from "../styles/commonStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -24,14 +24,23 @@ export default function AccountScreen({ navigation }) {
       console.log("Error getting user name");
       if (error.response){
         console.log(error.response.data);
+        if (error.response.data.status_code === 401) { //if token expired sign you out
+          signOut();
+        }
       }else{
         console.log(error);
       }
     }
   }
 
-  useEffect(()=>{
-    getUsername();
+  useEffect(()=>{ 
+    console.log("Setting up navlistener") //This is subseqeunt
+    const removeListener = navigation.addListener("focus", ()=>{ //This navigation.add listener is different from ()=> navigation.add listener It returns a remove listener only the ()=>runs the method
+      setUsername(<ActivityIndicator/>); //Because {username} is below so while username not set, then return activity indicator
+      getUsername()
+    })
+    getUsername(); //This is for first tim it runs
+    return removeListener
   }, [])
   function signOut() {
     AsyncStorage.removeItem("token");
