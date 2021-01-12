@@ -47,6 +47,7 @@ export default function SignInScreen({ navigation }) {
     // do stuff here to log in
   }
 
+
   function dismissKeyboard() {
     if (Platform.OS !== "web") {
       Keyboard.dismiss();

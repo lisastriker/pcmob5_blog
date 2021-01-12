@@ -2,46 +2,25 @@ import React from "react";
 import { ActivityIndicator, Button, StyleSheet, Text, View } from "react-native";
 import { commonStyles } from "../styles/commonStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import {useUsername} from "../hooks/useAPI"
 
-const API="https://lisastriker.pythonanywhere.com"
-const API_WHOAMI = "/whoami"
 export default function AccountScreen({ navigation }) {
-  const [username, setUsername] = useState("")
-
-  async function getUsername(){
-    console.log("...Getting user name...");
-    const token = await AsyncStorage.getItem("token");
-    console.log(`Token is ${token}`);
-    try{
-      const response = await axios.get(API + API_WHOAMI, {
-        headers:{Authorization:`JWT ${token}`},
-      });
-      console.log("Got username!");
-      setUsername(response.data.username)
-    } catch(error){
-      console.log("Error getting user name");
-      if (error.response){
-        console.log(error.response.data);
-        if (error.response.data.status_code === 401) { //if token expired sign you out
-          signOut();
-        }
-      }else{
-        console.log(error);
-      }
+  const [username, loading, error, refresh] = useUsername() //You get the array from useUsername can u can rename as long as its order of array
+  
+  useEffect(()=>{
+    if(error){
+      signOut()
     }
-  }
+  },[error]) //Monitor error variable, its false when load in, but if have any error it will sign you out
 
-  useEffect(()=>{ 
-    console.log("Setting up navlistener") //This is subseqeunt
-    const removeListener = navigation.addListener("focus", ()=>{ //This navigation.add listener is different from ()=> navigation.add listener It returns a remove listener only the ()=>runs the method
-      setUsername(<ActivityIndicator/>); //Because {username} is below so while username not set, then return activity indicator
-      getUsername()
-    })
-    getUsername(); //This is for first tim it runs
+  useEffect(()=>{
+    const removeListener = navigation.addListener("focus",()=>{ ///This navigation.add listener is different from ()=> navigation.add listener It returns a remove listener only the ()=>runs the method
+      refresh(true) //You ported over setRefresh if you look at hook
+    });
     return removeListener
-  }, [])
+  },[])
+
   function signOut() {
     AsyncStorage.removeItem("token");
     navigation.navigate("SignIn");
@@ -50,7 +29,7 @@ export default function AccountScreen({ navigation }) {
   return (
     <View style={commonStyles.container}>
       <Text>Account Screen</Text>
-      <Text>{username}</Text>
+      {loading ? <ActivityIndicator/> : <Text>{username}</Text>}
       <Button title="Sign out" onPress={signOut} />
     </View>
   );
