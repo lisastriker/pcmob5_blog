@@ -30,7 +30,8 @@ export function useUsername(){ //hooks are called use in front must
                         setUsername(null)
                         //setLoading(false)
                     } finally{
-                        setLoading(false) //Regardless or error or not it will setLoading is false. 
+                        setLoading(false)
+                    }     //Regardless or error or not it will setLoading is false. 
                 }
             })();
             setRefresh(false) //After u done with all stuff, then refresh will set back to false

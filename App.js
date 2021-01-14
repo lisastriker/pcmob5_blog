@@ -3,11 +3,13 @@ import React from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import SignInScreen from "./screens/SignInScreen";
 import AccountScreen from "./screens/AccountScreen";
+import SignUpScreen from "./screens/SignUpScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from "react";
 import { useEffect } from "react";
+import TabStack from "./components/TabStack"
 const Stack = createStackNavigator();
 
 
@@ -32,9 +34,10 @@ export default function App() {
       <ActivityIndicator/>
     </View>) : (
     <NavigationContainer>
-      <Stack.Navigator mode="modal" headerMode="none" initialRouteName={signedIn? "Account": "SignIn"}>
-        <Stack.Screen component={AccountScreen} name="Account" />
+      <Stack.Navigator mode="modal" headerMode="none" screenOptions={{ animationEnabled:false}}>
+        <Stack.Screen component={TabStack} name="TabStack" />
         <Stack.Screen component={SignInScreen} name="SignIn" />
+        <Stack.Screen component={SignUpScreen} name="SignUp"/>
       </Stack.Navigator>
     </NavigationContainer>
   );

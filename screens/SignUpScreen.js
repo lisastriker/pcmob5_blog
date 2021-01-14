@@ -1,13 +1,22 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { commonStyles } from "../styles/commonStyles";
+import { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Platform,
+  ActivityIndicator,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import SignInSignUpView from "../components/SignInSignUpView"
 
-export default function SignUpScreen({ navigation }) {
-  return (
-    <View style={commonStyles.container}>
-      <Text>Sign Up Screen</Text>
-    </View>
-  );
+export default function SignUpScreen({navigation}){
+  return <SignInSignUpView navigation={navigation} isSignIn={false}/>
 }
 
 const styles = StyleSheet.create({});
