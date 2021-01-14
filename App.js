@@ -10,11 +10,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from "react";
 import { useEffect } from "react";
 import TabStack from "./components/TabStack"
-import {Provider} from "react-redux"
+import {Provider, useDispatch, useSelector} from "react-redux"
 import store from "./redux/createStore"
+import{signInAction} from "./redux/ducks/blogAuth"
+
 const Stack = createStackNavigator();
 
-export default function App(){
+export default function AppWrapper(){
   return(
     <Provider store={store}>
       <App/>
@@ -24,12 +26,12 @@ export default function App(){
 
 function App() { //Now App is function
   const [loading, setLoading] = useState(true);
-  const [signedIn, setSignedIn] = useState(false);
-  
+  const signedIn = useSelector((state)=>state.auth.signedIn) //auth from createStore, signedIn from initial state of reducer
+  const dispatch = useDispatch(); //To replace setSignedIn
   async function loadToken(){
     const token = await AsyncStorage.getItem("token");
     if(token){
-      setSignedIn(true);
+      dispatch(signInAction()) //Replaced setSignIn(true)
     }
     setLoading(false);
   }
@@ -38,16 +40,21 @@ function App() { //Now App is function
     loadToken();
   }, [])
   
-  return loading ? (
+  if (loading){
+    return  (
     <View style={styles.container}>
       <ActivityIndicator/>
-    </View>) : (
+    </View>);
+ } 
+  return(
     <NavigationContainer>
-      <Stack.Navigator mode="modal" headerMode="none" initialRouteName = {signedIn ? "TabStack" : "SignIn"}screenOptions={{ animationEnabled:false}}>
-        <Stack.Screen component={TabStack} name="TabStack" />
+      {signedIn? (<TabStack/>): (
+        <Stack.Navigator mode="modal" headerMode="none" initialRouteName = {signedIn ? "TabStack" : "SignIn"}screenOptions={{ animationEnabled:false}}>
         <Stack.Screen component={SignInScreen} name="SignIn" />
         <Stack.Screen component={SignUpScreen} name="SignUp"/>
       </Stack.Navigator>
+      )}
+      
     </NavigationContainer>
   );
 }

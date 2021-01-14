@@ -16,7 +16,7 @@ const initialState = {
 
 export default function blogAuthReducer(state = initialState, action){
     switch (action.type){
-        case SIGN_iN:
+        case SIGN_IN:
             return{...state, signedIn:true} //In case there are other values in the state, though none
         case SIGN_OUT:
             return{...state, signedIn:false}
