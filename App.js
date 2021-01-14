@@ -10,10 +10,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from "react";
 import { useEffect } from "react";
 import TabStack from "./components/TabStack"
+import {Provider} from "react-redux"
+import store from "./redux/createStore"
 const Stack = createStackNavigator();
 
+export default function App(){
+  return(
+    <Provider store={store}>
+      <App/>
+    </Provider>
+  )
+}
 
-export default function App() {
+function App() { //Now App is function
   const [loading, setLoading] = useState(true);
   const [signedIn, setSignedIn] = useState(false);
   
@@ -34,7 +43,7 @@ export default function App() {
       <ActivityIndicator/>
     </View>) : (
     <NavigationContainer>
-      <Stack.Navigator mode="modal" headerMode="none" screenOptions={{ animationEnabled:false}}>
+      <Stack.Navigator mode="modal" headerMode="none" initialRouteName = {signedIn ? "TabStack" : "SignIn"}screenOptions={{ animationEnabled:false}}>
         <Stack.Screen component={TabStack} name="TabStack" />
         <Stack.Screen component={SignInScreen} name="SignIn" />
         <Stack.Screen component={SignUpScreen} name="SignUp"/>
