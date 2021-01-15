@@ -56,7 +56,7 @@ function App() { //Now App is function
       )}
       
     </NavigationContainer>
-  );
+  ); //If you cannot return 2 things, you can us a fragment <> </> for the stackscreens
 }
 
 const styles = StyleSheet.create({

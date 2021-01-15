@@ -11,16 +11,19 @@ import {
   Platform,
   ActivityIndicator,
 } from "react-native";
+import { useDispatch } from "react-redux";
 import {useAuth} from "../hooks/useAuth"
+import { signInAction } from "../redux/ducks/blogAuth";
+
 
 export default function SignInSignUpScreen({ navigation, isSignIn }) { //navigation and isSignIn is props
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const dispatch = useDispatch();
   const[login, signup, loading, errorText] = useAuth(
     username,
     password,
-    ()=>{navigation.navigate("TabStack")}
+    ()=>{dispatch(signInAction())}
   )
 
   function dismissKeyboard() {

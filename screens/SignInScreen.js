@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import SignInSignUpScreen from "../components/SignInSignUpView";
 
 export default function SignInScreen({ navigation }) { //Navigation here is to receive
