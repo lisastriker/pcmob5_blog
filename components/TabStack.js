@@ -2,6 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import React from "react";
 import { createStackNavigator } from '@react-navigation/stack'
 import AccountScreen from '../screens/AccountScreen';
+import CreateScreen from '../screens/CreateScreen';
 import IndexScreen from "../screens/IndexScreen"
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 const Stack = createStackNavigator();
@@ -15,6 +16,7 @@ function BlogStack() { //IndexScreen is in a stack, you can look above n see the
           component={IndexScreen}
           options={{ headerLeft: null }}
         />
+        <Stack.Screen name="Create" component={CreateScreen}/>
       </Stack.Navigator>
     );
   }

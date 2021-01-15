@@ -1,13 +1,13 @@
 import React from "react";
-import { ActivityIndicator, Button, StyleSheet, Switch, Text, View } from "react-native";
+import { ActivityIndicator, Button, StyleSheet, Switch, View } from "react-native";
 import { commonStyles } from "../styles/commonStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState, useEffect, useCallback } from "react";
 import {useUsername} from "../hooks/useAPI"
 import { useDispatch, useSelector } from "react-redux";
 import{signOutAction} from "../redux/ducks/blogAuth"
-import {darkModeFunction} from "../redux/ducks/accountPrefs"
-
+import {darkModeFunction, reset} from "../redux/ducks/accountPrefs"
+import {TextComponent} from "../components/textComponent"
 export default function AccountScreen({ navigation }) {
   const [username, loading, error, refresh] = useUsername() //You get the array from useUsername can u can rename as long as its order of array
   const dispatch = useDispatch();
@@ -29,13 +29,14 @@ export default function AccountScreen({ navigation }) {
   function signOut() {
     AsyncStorage.removeItem("token");
     dispatch(signOutAction())
+    dispatch(reseyt())
   }
 
   return (
-    <View style={darkMode? commonStyles.container : styles.darkContainer}>
-      <Text style={{color: darkMode? "white" : "black" }}>Account Screen</Text>
+    <View style={darkMode? styles.darkContainer  : commonStyles.container}>
+      <TextComponent words="Account Screen"/>
       <Switch value={darkMode} onValueChange={()=>dispatch(darkModeFunction())}></Switch>
-      {loading ? <ActivityIndicator/> : <Text style={{color: darkMode? "white" : "black" }}>{username}</Text>}
+      {loading ? <ActivityIndicator/> : <TextComponent words={username}/>}
       <Button title="Sign out" onPress={signOut} />
     </View>
   );
